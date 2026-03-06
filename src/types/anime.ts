@@ -1,4 +1,4 @@
-// ─── Ongoing Anime List ────────────────────────────────────────────
+// ─── Ongoing / Search / Genre / Movies Anime List ─────────────────
 export interface OngoingAnime {
   title: string;
   slug: string;
@@ -14,7 +14,7 @@ export interface Pagination {
   currentPage: number;
 }
 
-export interface OngoingResponse {
+export interface AnimeListResponse {
   status: string;
   creator: string;
   source: string;
@@ -22,12 +22,20 @@ export interface OngoingResponse {
   pagination: Pagination;
 }
 
-// ─── Anime Detail ──────────────────────────────────────────────────
+// ─── Genre List ────────────────────────────────────────────────────
 export interface Genre {
   name: string;
   slug: string;
 }
 
+export interface GenreListResponse {
+  status: string;
+  creator: string;
+  source: string;
+  genres: Genre[];
+}
+
+// ─── Anime Detail ──────────────────────────────────────────────────
 export interface EpisodeItem {
   name: string;
   slug: string;

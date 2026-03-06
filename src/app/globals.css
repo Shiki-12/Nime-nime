@@ -1,7 +1,24 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+/* ─── HiAnime / Zoro.to Inspired Theme ──────────────────────────── */
 @theme inline {
-  --font-sans: var(--font-inter);
+  /* Typography */
+  --font-sans: 'Inter', var(--font-inter), system-ui, sans-serif;
+
+  /* ── Core palette ──────────────────────────────────────────────── */
+  --color-hn-body: #201f31;
+  --color-hn-dark: #191826;
+  --color-hn-card: #27263a;
+  --color-hn-card-hover: #2f2e45;
+  --color-hn-primary: #ffbade;
+  --color-hn-secondary: #cae962;
+  --color-hn-green: #b0e3af;
+  --color-hn-orange: #f8b84e;
+  --color-hn-blue: #89c4f4;
+  --color-hn-text: #ffffff;
+  --color-hn-text-muted: #9c9c9c;
+  --color-hn-border: rgba(255, 255, 255, 0.06);
 }
 
 /* ─── Base ──────────────────────────────────────────────────────── */
@@ -10,26 +27,42 @@ html {
 }
 
 body {
-  background-color: #0a0a0f;
-  color: #ededed;
+  background-color: var(--color-hn-body);
+  color: var(--color-hn-text);
+  overflow-x: hidden;
 }
 
 /* ─── Custom scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-hn-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: var(--color-hn-primary);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #ff9ec2;
+}
+
+/* ─── Scrollbar for episode list ────────────────────────────────── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 186, 222, 0.3);
+  border-radius: 9999px;
 }
 
 /* ─── Skeleton animation ────────────────────────────────────────── */
@@ -37,21 +70,75 @@ body {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    #18181b 0%,
-    #27272a 50%,
-    #18181b 100%
-  );
+  background: linear-gradient(90deg,
+      var(--color-hn-dark) 0%,
+      var(--color-hn-card) 50%,
+      var(--color-hn-dark) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+/* ─── Hero slide fade ───────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* ─── Glass header ──────────────────────────────────────────────── */
+.header-glass {
+  background: rgba(25, 24, 38, 0.85);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Dot separator ─────────────────────────────────────────────── */
+.dot-sep {
+  width: 4px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 6px;
+}
+
+/* ─── Hero gradient ─────────────────────────────────────────────── */
+.hero-gradient {
+  background: linear-gradient(0deg, var(--color-hn-body) 0%, transparent 100%);
+}
+
+.hero-gradient-r {
+  background: linear-gradient(90deg, rgba(32, 31, 49, 0.95) 0%, rgba(32, 31, 49, 0.7) 40%, transparent 100%);
+}
+
+/* ─── Card hover overlay ────────────────────────────────────────── */
+.card-hover-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.group:hover .card-hover-overlay {
+  opacity: 1;
 }
 
 /* ─── Video player fixes ────────────────────────────────────────── */

@@ -1,7 +1,8 @@
 import type {
-    OngoingResponse,
+    AnimeListResponse,
     AnimeDetailResponse,
     EpisodeResponse,
+    GenreListResponse,
 } from "@/types/anime";
 
 const BASE_URL = "https://www.sankavollerei.com/anime/animasu";
@@ -29,46 +30,66 @@ async function apiFetch<T>(
     return json;
 }
 
-// ─── Public helpers ────────────────────────────────────────────────
+// ─── Ongoing / Home ────────────────────────────────────────────────
 
-/**
- * Fetch the list of currently airing / ongoing anime.
- */
 export async function getOngoingAnime(
     page: number = 1
-): Promise<OngoingResponse> {
-    return apiFetch<OngoingResponse>(
-        `/ongoing?page=${page}`,
-        3600 // revalidate every hour
-    );
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(`/ongoing?page=${page}`, 3600);
 }
 
-/**
- * Fetch full details for a single anime by its slug.
- */
+// ─── Detail & Episode ──────────────────────────────────────────────
+
 export async function getAnimeDetail(
     slug: string
 ): Promise<AnimeDetailResponse> {
     return apiFetch<AnimeDetailResponse>(`/detail/${slug}`, 3600);
 }
 
-/**
- * Fetch streaming links for a specific episode by its slug.
- */
 export async function getEpisodeData(
     episodeSlug: string
 ): Promise<EpisodeResponse> {
     return apiFetch<EpisodeResponse>(`/episode/${episodeSlug}`, 3600);
 }
 
-/**
- * Search anime by keyword.
- */
+// ─── Search ────────────────────────────────────────────────────────
+
 export async function searchAnime(
-    keyword: string
-): Promise<OngoingResponse> {
-    return apiFetch<OngoingResponse>(
-        `/search/${encodeURIComponent(keyword)}`,
-        60
+    query: string,
+    page: number = 1
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(
+        `/search/${encodeURIComponent(query)}?page=${page}`,
+        60 // short cache for search
     );
+}
+
+// ─── Genres ────────────────────────────────────────────────────────
+
+export async function getGenres(): Promise<GenreListResponse> {
+    return apiFetch<GenreListResponse>("/genres", 86400); // cache 24h
+}
+
+export async function getAnimeByGenre(
+    genreSlug: string,
+    page: number = 1
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(
+        `/genre/${genreSlug}?page=${page}`,
+        3600
+    );
+}
+
+// ─── Categories ────────────────────────────────────────────────────
+
+export async function getMovies(
+    page: number = 1
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(`/movies?page=${page}`, 3600);
+}
+
+export async function getPopularAnime(
+    page: number = 1
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(`/popular?page=${page}`, 3600);
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getAnimeDetail } from "@/lib/api";
+import AnimeActions from "@/components/AnimeActions";
 
 interface AnimeDetailPageProps {
     params: Promise<{ slug: string }>;
@@ -10,29 +11,31 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
     const { slug } = await params;
     const { detail: anime } = await getAnimeDetail(slug);
 
+    const hasValidRating =
+        anime.rating &&
+        anime.rating !== "N/A" &&
+        anime.rating !== "0" &&
+        anime.rating.trim() !== "";
+
     return (
         <div className="relative">
             {/* Hero Banner */}
-            <div className="relative h-[420px] w-full overflow-hidden sm:h-[480px]">
-                {/* Background (blurred poster) */}
+            <div className="relative h-[400px] w-full overflow-hidden sm:h-[440px]">
                 <Image
                     src={anime.poster}
                     alt={anime.title}
                     fill
                     priority
-                    className="object-cover blur-2xl brightness-[0.3] saturate-150 scale-110"
+                    className="object-cover blur-2xl brightness-[0.2] saturate-150 scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-hn-body via-hn-body/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-hn-body/90 to-transparent" />
 
-                {/* Gradient overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f]/80 to-transparent" />
-
-                {/* Content */}
                 <div className="absolute inset-0 flex items-end">
-                    <div className="mx-auto flex w-full max-w-7xl gap-6 px-4 pb-8 sm:px-6 lg:px-8">
+                    <div className="mx-auto flex w-full max-w-[1440px] gap-6 px-4 pb-8 lg:px-6">
                         {/* Poster */}
                         <div className="hidden shrink-0 sm:block">
-                            <div className="relative h-[280px] w-[200px] overflow-hidden rounded-xl shadow-2xl shadow-black/50 ring-1 ring-white/10">
+                            <div className="relative h-[260px] w-[185px] overflow-hidden rounded-lg shadow-2xl shadow-black/50 ring-1 ring-white/10">
                                 <Image
                                     src={anime.poster}
                                     alt={anime.title}
@@ -44,59 +47,70 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                         </div>
 
                         {/* Info */}
-                        <div className="flex flex-col justify-end gap-3">
-                            <h1 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+                        <div className="flex flex-col justify-end gap-2.5">
+                            <h1 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl">
                                 {anime.title}
                             </h1>
 
-                            {/* Rating + Meta */}
-                            <div className="flex flex-wrap items-center gap-3">
-                                {anime.rating && (
-                                    <div className="flex items-center gap-1 rounded-lg bg-yellow-500/20 px-2.5 py-1 text-sm font-bold text-yellow-400">
-                                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            {/* Meta row */}
+                            <div className="flex flex-wrap items-center gap-2 text-[12px]">
+                                {hasValidRating && (
+                                    <span className="flex items-center gap-1 rounded bg-hn-orange/20 px-2 py-0.5 font-bold text-hn-orange">
+                                        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 0 0 .951-.69l1.07-3.292Z" />
                                         </svg>
                                         {anime.rating}
-                                    </div>
+                                    </span>
                                 )}
-                                <span className="rounded-lg bg-zinc-800 px-2.5 py-1 text-xs font-medium text-zinc-300 ring-1 ring-white/10">
+                                <span className="rounded bg-hn-primary/20 px-2 py-0.5 font-semibold text-hn-primary">
                                     {anime.type}
                                 </span>
-                                <span className="rounded-lg bg-zinc-800 px-2.5 py-1 text-xs font-medium text-zinc-300 ring-1 ring-white/10">
+                                <span className="rounded bg-white/[0.06] px-2 py-0.5 font-medium text-white/60">
                                     {anime.status}
                                 </span>
                                 {anime.duration && (
-                                    <span className="rounded-lg bg-zinc-800 px-2.5 py-1 text-xs font-medium text-zinc-300 ring-1 ring-white/10">
+                                    <span className="rounded bg-white/[0.06] px-2 py-0.5 font-medium text-white/60">
                                         {anime.duration}
                                     </span>
                                 )}
                             </div>
 
                             {/* Genres */}
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-1.5">
                                 {anime.genres.map((g) => (
-                                    <span
+                                    <Link
                                         key={g.slug}
-                                        className="rounded-full bg-violet-600/20 px-3 py-1 text-xs font-medium text-violet-300 ring-1 ring-violet-500/30"
+                                        href={`/genres/${g.slug}`}
+                                        className="rounded bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-white/50 transition-colors hover:bg-hn-primary/15 hover:text-hn-primary"
                                     >
                                         {g.name}
-                                    </span>
+                                    </Link>
                                 ))}
                             </div>
 
-                            {/* Synopsis (truncated for hero) */}
-                            <p className="line-clamp-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
+                            {/* Synopsis (truncated) */}
+                            <p className="line-clamp-3 max-w-2xl text-[13px] leading-relaxed text-white/40">
                                 {anime.synopsis}
                             </p>
+
+                            {/* Actions */}
+                            <AnimeActions
+                                anime={{
+                                    slug,
+                                    title: anime.title,
+                                    poster: anime.poster,
+                                    type: anime.type,
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Body */}
-            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                {/* Additional info */}
-                <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto max-w-[1440px] px-4 py-8 lg:px-6">
+                {/* Meta cards */}
+                <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     {[
                         { label: "Studio", value: anime.studio },
                         { label: "Season", value: anime.season },
@@ -107,9 +121,9 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                         .map((item) => (
                             <div
                                 key={item.label}
-                                className="rounded-xl bg-zinc-900/60 p-4 ring-1 ring-white/5"
+                                className="rounded-lg bg-hn-card p-4"
                             >
-                                <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                                <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
                                     {item.label}
                                 </p>
                                 <p className="mt-1 text-sm font-semibold text-white">
@@ -119,19 +133,25 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                         ))}
                 </div>
 
-                {/* Full Synopsis */}
-                <section className="mb-10">
-                    <h2 className="mb-3 text-lg font-bold text-white">Synopsis</h2>
-                    <p className="max-w-4xl text-sm leading-relaxed text-zinc-400">
+                {/* Synopsis */}
+                <section className="mb-8">
+                    <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-white">
+                        <div className="h-4 w-1 rounded-full bg-hn-primary" />
+                        Synopsis
+                    </h2>
+                    <p className="max-w-3xl text-sm leading-relaxed text-white/50">
                         {anime.synopsis}
                     </p>
                 </section>
 
                 {/* Trailer */}
                 {anime.trailer && (
-                    <section className="mb-10">
-                        <h2 className="mb-3 text-lg font-bold text-white">Trailer</h2>
-                        <div className="overflow-hidden rounded-xl ring-1 ring-white/10">
+                    <section className="mb-8">
+                        <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-white">
+                            <div className="h-4 w-1 rounded-full bg-hn-primary" />
+                            Trailer
+                        </h2>
+                        <div className="overflow-hidden rounded-lg ring-1 ring-white/5">
                             <iframe
                                 src={anime.trailer}
                                 className="aspect-video w-full max-w-2xl"
@@ -144,30 +164,29 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
 
                 {/* Episode List */}
                 <section>
-                    <div className="mb-4 flex items-center gap-3">
-                        <div className="h-6 w-1 rounded-full bg-gradient-to-b from-violet-500 to-fuchsia-500" />
-                        <h2 className="text-lg font-bold text-white">
-                            Episodes ({anime.episodes.length})
+                    <div className="mb-4 flex items-center gap-2">
+                        <div className="h-4 w-1 rounded-full bg-hn-primary" />
+                        <h2 className="text-base font-bold text-white">
+                            Episodes
                         </h2>
+                        <span className="rounded bg-hn-primary/15 px-2 py-0.5 text-[11px] font-bold text-hn-primary">
+                            {anime.episodes.length}
+                        </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                         {anime.episodes.map((ep) => (
                             <Link
                                 key={ep.slug}
-                                href={`/anime/watch/${ep.slug}`}
-                                className="group flex items-center gap-3 rounded-xl bg-zinc-900/80 p-3 ring-1 ring-white/5 transition-all hover:bg-zinc-800 hover:ring-violet-500/30"
+                                href={`/anime/watch/${ep.slug}?anime=${slug}`}
+                                className="group flex items-center gap-2.5 rounded-lg bg-hn-card p-2.5 transition-all hover:bg-hn-primary/15 hover:ring-1 hover:ring-hn-primary/30"
                             >
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-600/20 text-sm font-bold text-violet-400 transition-colors group-hover:bg-violet-600 group-hover:text-white">
-                                    <svg
-                                        className="h-4 w-4"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-hn-primary/10 text-hn-primary transition-colors group-hover:bg-hn-primary group-hover:text-hn-dark">
+                                    <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
                                     </svg>
                                 </div>
-                                <span className="truncate text-sm font-medium text-zinc-300 group-hover:text-white">
+                                <span className="truncate text-[12px] font-medium text-white/70 group-hover:text-hn-primary">
                                     {ep.name}
                                 </span>
                             </Link>
