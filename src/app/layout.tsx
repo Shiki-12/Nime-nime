@@ -10,11 +10,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NimeNime — Anime Streaming Portal",
-  description:
-    "Watch the latest anime episodes for free. Discover ongoing series, stream in HD, and explore a vast library of anime titles.",
-  keywords: ["anime", "streaming", "watch anime", "ongoing anime", "anime episodes"],
-};
+  title: 'Nimenime - Nonton Anime Sub Indo',
+  description: 'Nonton anime subtitle Indonesia gratis, update setiap hari dengan kualitas HD hanya di Nimenime.',
+  openGraph: {
+    title: 'Nimenime - Nonton Anime Sub Indo',
+    description: 'Nonton anime subtitle Indonesia gratis, update setiap hari dengan kualitas HD.',
+    url: 'https://nime-nime.vercel.app',
+    siteName: 'Nimenime',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nimenime - Nonton Anime Sub Indo',
+    description: 'Nonton anime subtitle Indonesia gratis, update setiap hari dengan kualitas HD.',
+  },
+}
 
 export default function RootLayout({
   children,
