@@ -3,6 +3,8 @@ import type {
     AnimeDetailResponse,
     EpisodeResponse,
     GenreListResponse,
+    ScheduleResponse,
+    OngoingAnime,
 } from "@/types/anime";
 
 const BASE_URL = "https://www.sankavollerei.com/anime/animasu";
@@ -30,12 +32,39 @@ async function apiFetch<T>(
     return json;
 }
 
-// ─── Ongoing / Home ────────────────────────────────────────────────
+// ─── Home / Ongoing / Completed ────────────────────────────────────
+
+export async function getHomeAnime(
+    page: number = 1
+): Promise<AnimeListResponse> {
+    // The /home endpoint returns { ongoing: [...], recent: [...] }
+    // instead of the standard { animes: [...], pagination: {...} }.
+    // Normalize it so the page component can treat all tabs uniformly.
+    const raw = await apiFetch<{
+        status: string;
+        ongoing?: OngoingAnime[];
+        recent?: OngoingAnime[];
+    }>(`/home?page=${page}`, 3600);
+
+    return {
+        status: raw.status,
+        creator: "",
+        source: "",
+        animes: [...(raw.ongoing ?? []), ...(raw.recent ?? [])],
+        pagination: { hasNext: false, hasPrev: false, currentPage: page },
+    };
+}
 
 export async function getOngoingAnime(
     page: number = 1
 ): Promise<AnimeListResponse> {
     return apiFetch<AnimeListResponse>(`/ongoing?page=${page}`, 3600);
+}
+
+export async function getCompletedAnime(
+    page: number = 1
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(`/completed?page=${page}`, 3600);
 }
 
 // ─── Detail & Episode ──────────────────────────────────────────────
@@ -92,4 +121,10 @@ export async function getPopularAnime(
     page: number = 1
 ): Promise<AnimeListResponse> {
     return apiFetch<AnimeListResponse>(`/popular?page=${page}`, 3600);
+}
+
+// ─── Schedule ──────────────────────────────────────────────────────
+
+export async function getAnimeSchedule(): Promise<ScheduleResponse> {
+    return apiFetch<ScheduleResponse>("/schedule", 3600);
 }

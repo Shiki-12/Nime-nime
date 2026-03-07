@@ -82,3 +82,11 @@ export interface EpisodeResponse {
   streams: StreamSource[];
   downloads: unknown[];
 }
+
+// ─── Schedule ──────────────────────────────────────────────────────
+export interface ScheduleResponse {
+  status: string;
+  creator: string;
+  source: string;
+  schedule: Record<string, OngoingAnime[]>;
+}
