@@ -56,7 +56,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* Grid */}
         {animeList.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {animeList.map((anime) => (
               <AnimeCard key={anime.slug} anime={anime} />
             ))}
@@ -132,7 +132,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* Grid */}
         {animeList.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {animeList.map((anime) => (
               <AnimeCard key={anime.slug} anime={anime} />
             ))}
@@ -214,7 +214,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {ongoingList.map((anime) => (
                 <AnimeCard key={anime.slug} anime={anime} />
               ))}
@@ -236,7 +236,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {completedList.map((anime) => (
                 <AnimeCard key={anime.slug} anime={anime} />
               ))}

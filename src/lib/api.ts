@@ -128,3 +128,34 @@ export async function getPopularAnime(
 export async function getAnimeSchedule(): Promise<ScheduleResponse> {
     return apiFetch<ScheduleResponse>("/schedule", 3600);
 }
+
+// ─── Advanced Search ────────────────────────────────────────────────
+
+export async function getAdvancedSearch(
+    queryString: string
+): Promise<AnimeListResponse> {
+    return apiFetch<AnimeListResponse>(
+        `/advanced-search?${queryString}`,
+        1800
+    );
+}
+
+// ─── MAL Rating (Jikan API v4) ─────────────────────────────────────
+
+export async function getMalRating(animeTitle: string): Promise<string> {
+    try {
+        const res = await fetch(
+            `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(animeTitle)}&limit=1`,
+            { next: { revalidate: 86400 } }
+        );
+
+        if (!res.ok) return "N/A";
+
+        const json = await res.json();
+        const score = json?.data?.[0]?.score;
+
+        return score != null ? String(score) : "N/A";
+    } catch {
+        return "N/A";
+    }
+}

@@ -7,11 +7,14 @@ import SearchBar from "@/components/SearchBar";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
+  { label: "Filter", href: "/filter" },
   { label: "Genres", href: "/genres" },
   { label: "Movies", href: "/movies" },
   { label: "Popular", href: "/popular" },
   { label: "Schedule", href: "/schedule" },
   { label: "Saved", href: "/saved" },
+  { label: "History", href: "/history" },
+  
 ];
 
 export default function Navbar() {

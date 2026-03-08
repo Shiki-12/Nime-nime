@@ -60,7 +60,7 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
 
             {animeList.length > 0 && (
                 <>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                         {animeList.map((anime) => (
                             <AnimeCard key={anime.slug} anime={anime} />
                         ))}

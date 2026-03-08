@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { getEpisodeData, getAnimeDetail } from "@/lib/api";
 import VideoPlayer from "@/components/VideoPlayer";
+import WatchHistoryTracker from "@/components/WatchHistoryTracker";
 import EpisodeList from "@/components/EpisodeList";
+import SidebarEpisodeList from "@/components/SidebarEpisodeList";
 import type { EpisodeItem } from "@/types/anime";
 
 interface StreamingPageProps {
@@ -21,11 +23,15 @@ export default async function StreamingPage({
 
     let episodes: EpisodeItem[] = [];
     let animeTitle: string | null = null;
+    let animePoster = "";
+    let animeType = "";
     if (animeSlug) {
         try {
             const { detail } = await getAnimeDetail(animeSlug);
             episodes = detail.episodes;
             animeTitle = detail.title;
+            animePoster = detail.poster;
+            animeType = detail.type;
         } catch {
             // Silently fail
         }
@@ -60,6 +66,18 @@ export default async function StreamingPage({
                 <div>
                     <VideoPlayer streams={episode.streams} title={episode.title} />
 
+                    {/* Track this episode in watch history */}
+                    {animeSlug && animeTitle && (
+                        <WatchHistoryTracker
+                            animeSlug={animeSlug}
+                            animeTitle={animeTitle}
+                            animePoster={animePoster}
+                            animeType={animeType}
+                            episodeSlug={episodeSlug}
+                            episodeName={episode.title}
+                        />
+                    )}
+
                     {/* Episode Navigation */}
                     {episodes.length > 0 && (
                         <EpisodeList
@@ -72,39 +90,11 @@ export default async function StreamingPage({
 
                 {/* Right Sidebar: Episode List (desktop) */}
                 {episodes.length > 0 && (
-                    <aside className="hidden lg:block">
-                        <div className="sticky top-[76px] rounded-lg bg-hn-card p-3">
-                            <div className="mb-3 flex items-center gap-2 border-b border-white/5 pb-3">
-                                <h3 className="text-sm font-bold text-white">Episodes</h3>
-                                <span className="rounded bg-hn-primary/15 px-2 py-0.5 text-[10px] font-bold text-hn-primary">
-                                    {episodes.length}
-                                </span>
-                            </div>
-                            <div className="max-h-[calc(100vh-180px)] space-y-1 overflow-y-auto pr-1 scrollbar-thin">
-                                {episodes.map((ep) => {
-                                    const isActive = ep.slug === episodeSlug;
-                                    const href = animeSlug
-                                        ? `/anime/watch/${ep.slug}?anime=${animeSlug}`
-                                        : `/anime/watch/${ep.slug}`;
-                                    return (
-                                        <Link
-                                            key={ep.slug}
-                                            href={href}
-                                            className={`flex items-center gap-2 rounded-md px-3 py-2 text-[12px] font-medium transition-all ${isActive
-                                                    ? "bg-hn-primary text-hn-dark"
-                                                    : "text-white/50 hover:bg-white/5 hover:text-white"
-                                                }`}
-                                        >
-                                            <svg className="h-3 w-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
-                                            </svg>
-                                            <span className="truncate">{ep.name}</span>
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </aside>
+                    <SidebarEpisodeList
+                        episodes={episodes}
+                        currentEpisodeSlug={episodeSlug}
+                        animeSlug={animeSlug}
+                    />
                 )}
             </div>
 

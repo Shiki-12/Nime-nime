@@ -24,21 +24,32 @@ A modern, responsive anime streaming platform built with **Next.js 16**, **React
   - View ongoing/airing anime with pagination
   - Popular anime listings
   - Movie catalog
+  - Random anime discovery with API endpoint
   
 - **Search & Filter**
   - Full-text anime search
+  - Advanced filtering page with multiple filter options
   - Browse by genres with curated selections
   - Filter by anime type and status
 
 - **Watch Anime**
   - Video player for streaming episodes
-  - Episode list with navigation
+  - Episode list with navigation and sidebar display
+  - Detailed episode information
   - Streaming integration
 
 - **User Features**
   - Save/bookmark your favorite anime
+  - Watch history tracking with timestamps
+  - Clear entire watch history
+  - View sorted watch history
   - Persistent storage using browser localStorage
   - Responsive design for desktop and mobile
+
+- **Release Schedule**
+  - View anime release schedule by day of the week
+  - Automatic detection of current day
+  - Shows all upcoming releases organized by day
 
 - **Navigation**
   - Intuitive navbar with quick links
@@ -79,25 +90,34 @@ Nime-nime/
 │   ├── app/                    # Next.js App Router
 │   │   ├── anime/[slug]/       # Anime detail pages
 │   │   ├── anime/watch/        # Episode watch pages
+│   │   ├── api/random/         # Random anime API endpoint
+│   │   ├── filter/             # Advanced filtering page
 │   │   ├── genres/             # Genre browsing
+│   │   ├── history/            # Watch history tracker
 │   │   ├── movies/             # Movie catalog
 │   │   ├── popular/            # Popular anime
-│   │   ├── search/[query]/     # Search results
 │   │   ├── saved/              # Bookmarked anime
+│   │   ├── schedule/           # Release schedule
+│   │   ├── search/[query]/     # Search results
 │   │   ├── layout.tsx          # Root layout
 │   │   ├── page.tsx            # Home/Ongoing anime
 │   │   └── globals.css         # Global styles
 │   ├── components/             # React components
 │   │   ├── AnimeCard.tsx       # Anime grid card
 │   │   ├── AnimeActions.tsx    # Action buttons
+│   │   ├── DetailEpisodeList.tsx # Detailed episode list
 │   │   ├── EpisodeList.tsx     # Episode navigation
+│   │   ├── FilterForm.tsx      # Advanced filter form
 │   │   ├── HeroBanner.tsx      # Featured banner
 │   │   ├── Navbar.tsx          # Main navigation
 │   │   ├── SearchBar.tsx       # Search input
+│   │   ├── SidebarEpisodeList.tsx # Episode sidebar
 │   │   ├── VideoPlayer.tsx     # Episode player
+│   │   ├── WatchHistoryTracker.tsx # History tracking
 │   │   └── Footer.tsx          # Footer section
 │   ├── hooks/                  # Custom React hooks
-│   │   └── useLocalStorage.ts  # Browser storage hook
+│   │   ├── useLocalStorage.ts  # Browser storage hook
+│   │   └── useWatchHistory.ts  # Watch history management
 │   ├── lib/                    # Utility functions
 │   │   └── api.ts              # API calls & data fetching
 │   └── types/                  # TypeScript interfaces
@@ -238,6 +258,13 @@ The app fetches anime data from an external anime database API with the followin
 | `/search?query=X` | Search anime by title |
 | `/movies` | Movie catalog |
 | `/popular` | Popular anime rankings |
+| `/schedule` | Get release schedule by day of week |
+
+### Custom API Endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| `/api/random` | Get random anime from popular list |
 
 ---
 
@@ -330,6 +357,6 @@ To contribute improvements:
 
 ---
 
-**Last Updated**: March 6, 2026  
+**Last Updated**: March 9, 2026  
 **Status**: Active Development  
-**Version**: 0.1.0
+**Version**: 0.2.0

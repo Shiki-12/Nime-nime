@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { EpisodeItem } from "@/types/anime";
+import { useWatchHistory } from "@/hooks/useWatchHistory";
 
 interface EpisodeListProps {
     episodes: EpisodeItem[];
@@ -14,6 +15,8 @@ export default function EpisodeList({
     currentEpisodeSlug,
     animeSlug,
 }: EpisodeListProps) {
+    const { isEpisodeWatched } = useWatchHistory();
+
     const currentIdx = episodes.findIndex(
         (ep) => ep.slug === currentEpisodeSlug
     );
@@ -74,18 +77,32 @@ export default function EpisodeList({
                     <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
                         {episodes.map((ep) => {
                             const isActive = ep.slug === currentEpisodeSlug;
+                            const watched =
+                                !isActive &&
+                                animeSlug != null &&
+                                isEpisodeWatched(animeSlug, ep.slug);
+
                             return (
                                 <Link
                                     key={ep.slug}
                                     href={buildHref(ep.slug)}
-                                    className={`flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[11px] font-medium transition-all ${isActive
+                                    className={`flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[11px] font-medium transition-all ${
+                                        isActive
                                             ? "bg-hn-primary text-hn-dark"
-                                            : "text-white/50 hover:bg-white/5 hover:text-white"
-                                        }`}
+                                            : watched
+                                              ? "bg-white/[0.03] text-white/30"
+                                              : "text-white/50 hover:bg-white/5 hover:text-white"
+                                    }`}
                                 >
-                                    <svg className="h-2.5 w-2.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
-                                    </svg>
+                                    {watched ? (
+                                        <svg className="h-2.5 w-2.5 shrink-0 text-hn-green" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                        </svg>
+                                    ) : (
+                                        <svg className="h-2.5 w-2.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                                        </svg>
+                                    )}
                                     <span className="truncate">{ep.name}</span>
                                 </Link>
                             );
