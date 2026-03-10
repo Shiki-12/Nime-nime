@@ -1,6 +1,6 @@
 import { getOngoingAnime, getCompletedAnime } from "@/lib/api";
 import AnimeCard from "@/components/AnimeCard";
-import HeroBanner from "@/components/HeroBanner";
+import HeroCarousel from "@/components/HeroCarousel";
 import Link from "next/link";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
@@ -16,7 +16,11 @@ export default async function Home({ searchParams }: HomeProps) {
   // ─── Dedicated "Ongoing" view ────────────────────────────────────
   if (tab === "ongoing") {
     let animeList: OngoingAnime[] = [];
-    let pagination: Pagination = { hasNext: false, hasPrev: false, currentPage };
+    let pagination: Pagination = {
+      hasNext: false,
+      hasPrev: false,
+      currentPage,
+    };
     let fetchError: string | null = null;
 
     try {
@@ -24,7 +28,8 @@ export default async function Home({ searchParams }: HomeProps) {
       animeList = res.animes ?? [];
       pagination = res.pagination;
     } catch (err) {
-      fetchError = err instanceof Error ? err.message : "Failed to fetch anime data.";
+      fetchError =
+        err instanceof Error ? err.message : "Failed to fetch anime data.";
     }
 
     return (
@@ -46,9 +51,14 @@ export default async function Home({ searchParams }: HomeProps) {
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
             <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-            <p className="mt-1 text-sm text-white/50">The anime API server is currently unreachable.</p>
+            <p className="mt-1 text-sm text-white/50">
+              The anime API server is currently unreachable.
+            </p>
             <p className="mt-2 break-all text-xs text-white/20">{fetchError}</p>
-            <Link href={`/?tab=ongoing&page=${currentPage}`} className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark">
+            <Link
+              href={`/?tab=ongoing&page=${currentPage}`}
+              className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark"
+            >
               Try again
             </Link>
           </div>
@@ -92,7 +102,11 @@ export default async function Home({ searchParams }: HomeProps) {
   // ─── Dedicated "Completed" view ──────────────────────────────────
   if (tab === "completed") {
     let animeList: OngoingAnime[] = [];
-    let pagination: Pagination = { hasNext: false, hasPrev: false, currentPage };
+    let pagination: Pagination = {
+      hasNext: false,
+      hasPrev: false,
+      currentPage,
+    };
     let fetchError: string | null = null;
 
     try {
@@ -100,7 +114,8 @@ export default async function Home({ searchParams }: HomeProps) {
       animeList = res.animes ?? [];
       pagination = res.pagination;
     } catch (err) {
-      fetchError = err instanceof Error ? err.message : "Failed to fetch anime data.";
+      fetchError =
+        err instanceof Error ? err.message : "Failed to fetch anime data.";
     }
 
     return (
@@ -122,9 +137,14 @@ export default async function Home({ searchParams }: HomeProps) {
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
             <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-            <p className="mt-1 text-sm text-white/50">The anime API server is currently unreachable.</p>
+            <p className="mt-1 text-sm text-white/50">
+              The anime API server is currently unreachable.
+            </p>
             <p className="mt-2 break-all text-xs text-white/20">{fetchError}</p>
-            <Link href={`/?tab=completed&page=${currentPage}`} className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark">
+            <Link
+              href={`/?tab=completed&page=${currentPage}`}
+              className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark"
+            >
               Try again
             </Link>
           </div>
@@ -178,23 +198,28 @@ export default async function Home({ searchParams }: HomeProps) {
     ongoingList = ongoingRes.animes ?? [];
     completedList = completedRes.animes ?? [];
   } catch (err) {
-    fetchError = err instanceof Error ? err.message : "Failed to fetch anime data.";
+    fetchError =
+      err instanceof Error ? err.message : "Failed to fetch anime data.";
   }
 
   return (
     <>
-      {/* Hero Banner */}
-      <HeroBanner />
+      {/* Hero Carousel */}
+      <HeroCarousel />
 
       <div className="mx-auto max-w-[1440px] px-4 pb-16 lg:px-6">
-
         {/* Error */}
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
             <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-            <p className="mt-1 text-sm text-white/50">The anime API server is currently unreachable.</p>
+            <p className="mt-1 text-sm text-white/50">
+              The anime API server is currently unreachable.
+            </p>
             <p className="mt-2 break-all text-xs text-white/20">{fetchError}</p>
-            <Link href="/" className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark">
+            <Link
+              href="/"
+              className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark"
+            >
               Try again
             </Link>
           </div>

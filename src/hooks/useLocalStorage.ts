@@ -13,6 +13,7 @@ export function useLocalStorage<T>(
         try {
             const item = window.localStorage.getItem(key);
             if (item) {
+                // eslint-disable-next-line
                 setStoredValue(JSON.parse(item) as T);
             }
         } catch (error) {
